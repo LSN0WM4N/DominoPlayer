@@ -2,7 +2,6 @@ package dominoplayer
 
 import (
 	"encoding/json"
-	"math/rand"
 	"net/http"
 )
 
@@ -80,7 +79,18 @@ func ValidMoves(piece Piece) []Piece {
 
 func Chose(piece Piece) Piece {
 	moves := ValidMoves(piece)
-	return moves[rand.Int()%len(pieces)]
+
+	var sum int32 = -1
+	var ans Piece = Piece{x: -1, y: -1}
+
+	for _, i := range moves {
+		if i.x+i.y >= sum {
+			ans = i
+			sum = i.x + i.y
+		}
+	}
+
+	return ans
 }
 
 func Remove(piece Piece) {

@@ -2,8 +2,8 @@ package dominoplayer
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
-	"math/rand"
 	"net/http"
 )
 
@@ -53,13 +53,14 @@ func Step(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if shouldPass {
-		var answer = []byte(`{\"piece\": null, \"head\": null}`)
+		var answer = []byte(`{"piece": null, "head": null}`)
 		w.Write(answer)
 	} else {
-		moves := ValidMoves(CreatePiece(mainGame.Heads))
-		piece := moves[rand.Int()%len(moves)]
+		piece := Chose(CreatePiece(mainGame.Heads))
 		var answer stepAnswer = stepAnswer{[]int32{piece.x, piece.y}, selectHead(piece, mainGame.Heads)}
 		w.Write(postStep(answer))
+		fmt.Println(mainGame.Pieces)
+		fmt.Println(answer)
 
 		Remove(piece)
 	}
